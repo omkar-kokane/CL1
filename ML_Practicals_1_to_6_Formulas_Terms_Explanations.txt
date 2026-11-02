@@ -1,0 +1,624 @@
+ML PRACTICALS 1–6: FORMULAS, TERMS, AND WHY THEY ARE USED
+===========================================================
+
+Purpose:
+This document explains the important formulas, the meaning of technical
+terms, and why each term or method is used in the corresponding practical.
+It is based on the six ML practicals discussed. Some formulas below are
+supporting theory and may not be explicitly calculated in the practical code.
+
+===========================================================
+PRACTICAL 1 – WINE CLASSIFICATION USING KNN AND PCA
+===========================================================
+
+A. TERMS USED AND WHY
+
+1. Dataset
+   Meaning: A collection of observations and their features.
+   Why used: The Wine dataset provides measurements of wine samples
+   that the model uses to learn how to classify them.
+
+2. Features (X)
+   Meaning: Input columns used to make a prediction.
+   Why used: The wine measurements help KNN identify which class a
+   sample belongs to.
+   Code: X = df.iloc[:, :-1]
+   This selects all rows and all columns except the last column.
+
+3. Target (y)
+   Meaning: The output/class that the model must predict.
+   Why used: It contains the correct wine class for each sample.
+   Code: y = df.iloc[:, -1]
+   This selects the last column.
+
+4. Train-test split
+   Meaning: Dividing data into training data and testing data.
+   Why used: The model learns from training data and is evaluated on
+   separate, unseen test data.
+   Common code: train_test_split(X, y, test_size=0.2, random_state=42)
+
+5. KNN (K-Nearest Neighbors)
+   Meaning: A supervised learning algorithm that predicts a sample's
+   class using the classes of its nearest training samples.
+   Why used: It classifies wine samples based on similarity.
+
+6. K (number of neighbours)
+   Meaning: Number of nearby training samples considered for prediction.
+   Why used: The nearest K samples vote on the predicted class.
+   In the discussed practical, the default K is 5.
+
+7. Euclidean distance
+   Meaning: Straight-line distance between two data points.
+   Why used: KNN uses distance to find the nearest neighbours.
+
+8. StandardScaler
+   Meaning: A preprocessing tool that transforms features to have
+   approximately zero mean and unit standard deviation.
+   Why used: Features with large numerical scales should not dominate
+   distance calculations in KNN.
+
+9. PCA (Principal Component Analysis)
+   Meaning: A dimensionality-reduction technique that transforms
+   features into a smaller number of principal components.
+   Why used: The practical reduces the feature dimensions, for example
+   to two components, so the data can be represented more simply and
+   visualized.
+
+10. Principal components
+    Meaning: New directions that capture decreasing amounts of
+    variation in the data.
+    Why used: The first components retain as much data variation as
+    possible for the selected number of dimensions.
+
+B. FORMULAS
+
+1. Euclidean Distance
+   d(x,y) = sqrt[ sum(i=1 to n) (x_i - y_i)^2 ]
+   Use: Find the nearest neighbours in KNN.
+
+2. Mean
+   mu = sum(x_i) / n
+   Use: Calculate the average value of a feature.
+
+3. Standardization (Z-score)
+   Z = (X - mu) / sigma
+   Use: Put features on a comparable scale.
+   sigma = standard deviation.
+
+4. Explained Variance Ratio
+   EVR of a component = variance captured by that component /
+                        total variance
+   Use: Understand how much variation each principal component
+   explains.
+
+5. Accuracy
+   Accuracy = (TP + TN) / (TP + TN + FP + FN)
+   Use: Measure the proportion of correct predictions.
+
+6. Precision
+   Precision = TP / (TP + FP)
+   Use: Of the samples predicted positive, measure how many are
+   actually positive.
+
+7. Recall
+   Recall = TP / (TP + FN)
+   Use: Of the actual positive samples, measure how many were found.
+
+8. F1-score
+   F1 = 2 * (Precision * Recall) / (Precision + Recall)
+   Use: Combine precision and recall into one score.
+
+C. CONFUSION MATRIX TERMS
+   TP: Actual positive and predicted positive.
+   TN: Actual negative and predicted negative.
+   FP: Actual negative but predicted positive.
+   FN: Actual positive but predicted negative.
+
+   For the Wine dataset's three classes, calculate these values for
+   each class separately using a one-vs-rest approach. In a multiclass
+   confusion matrix, the diagonal entries are the true positives for
+   their respective classes.
+
+===========================================================
+PRACTICAL 2 – UBER FARE PREDICTION
+===========================================================
+
+A. TERMS USED AND WHY
+
+1. Regression
+   Meaning: A supervised learning task that predicts a numerical value.
+   Why used: The fare amount is a continuous numerical value.
+
+2. Target variable
+   Meaning: The value the model is trying to predict.
+   Why used: Fare amount is the target in this practical.
+
+3. Features
+   Meaning: Input information used for prediction.
+   Why used: Pickup/drop-off coordinates, passenger count and
+   time-related information help estimate the fare.
+
+4. Missing values
+   Meaning: Entries that have no recorded value.
+   Why used: Missing records can interfere with analysis and model
+   training, so the practical checks and removes them.
+
+5. Outliers
+   Meaning: Values unusually far from the general pattern.
+   Why used: Extreme fares or invalid coordinates can distort the
+   analysis and model.
+
+6. IQR (Interquartile Range)
+   Meaning: Difference between the third and first quartiles.
+   Why used: It helps identify unusually low or high values.
+
+7. Correlation
+   Meaning: A measure of how two numerical variables change together.
+   Why used: It helps inspect relationships between features and fare.
+   Correlation does not by itself prove causation.
+
+8. Geodesic distance
+   Meaning: Distance measured along the Earth's surface between
+   geographical coordinates.
+   Why used: The practical calculates trip distance from pickup and
+   drop-off latitude/longitude using Geopy.
+
+9. Feature engineering
+   Meaning: Creating useful input variables from existing data.
+   Why used: The practical extracts pickup hour, day and month to
+   provide time-related information to the model.
+
+10. StandardScaler
+    Meaning: Scales numerical features using mean and standard deviation.
+    Why used: It puts features on comparable scales for modelling.
+
+11. Linear Regression
+    Meaning: A model that predicts a numerical target using a linear
+    relationship with input features.
+    Why used: It provides a baseline fare prediction model.
+
+12. Ridge Regression
+    Meaning: Linear regression with an L2 penalty on coefficient size.
+    Why used: It can reduce overly large coefficients and help control
+    overfitting.
+
+13. Lasso Regression
+    Meaning: Linear regression with an L1 penalty on coefficient size.
+    Why used: It can shrink some coefficients to zero and perform
+    feature selection.
+
+B. FORMULAS
+
+1. IQR
+   IQR = Q3 - Q1
+
+2. Outlier boundaries
+   Lower bound = Q1 - 1.5 * IQR
+   Upper bound = Q3 + 1.5 * IQR
+
+3. Mean Absolute Error (MAE)
+   MAE = (1/n) * sum |y_i - y_hat_i|
+   Use: Average absolute prediction error.
+
+4. Mean Squared Error (MSE)
+   MSE = (1/n) * sum (y_i - y_hat_i)^2
+   Use: Average squared prediction error; larger errors receive
+   greater weight.
+
+5. Root Mean Squared Error (RMSE)
+   RMSE = sqrt[(1/n) * sum (y_i - y_hat_i)^2]
+   Use: Prediction error in the same unit as the target.
+
+6. R-squared (R^2)
+   R^2 = 1 - [sum (y_i - y_hat_i)^2 /
+              sum (y_i - y_bar)^2]
+   Use: Measures how well the model explains variation in the target.
+
+   y_i = actual value; y_hat_i = predicted value;
+   y_bar = mean of actual values; n = number of observations.
+
+===========================================================
+PRACTICAL 3 – HANDWRITTEN DIGIT RECOGNITION USING SVM
+===========================================================
+
+A. TERMS USED AND WHY
+
+1. SVM (Support Vector Machine)
+   Meaning: A supervised learning algorithm that finds a decision
+   boundary separating classes.
+   Why used: It classifies handwritten digit images into digit classes.
+
+2. Support vectors
+   Meaning: Training points closest to the decision boundary.
+   Why used: These points determine the position of the SVM boundary.
+
+3. Hyperplane
+   Meaning: A decision boundary that separates classes.
+   Why used: SVM uses it to decide which class a sample belongs to.
+
+4. Margin
+   Meaning: Distance between the decision boundary and the closest
+   points from the classes.
+   Why used: SVM aims to find a boundary with a large margin.
+
+5. Kernel
+   Meaning: A function that allows SVM to model nonlinear boundaries.
+   Why used: The practical's SVC uses the RBF kernel by default.
+
+6. C parameter
+   Meaning: Controls the penalty for classification errors.
+   Why used: It balances a wider margin against training errors.
+   Larger C penalizes errors more strongly.
+
+7. Gamma parameter
+   Meaning: Controls the influence range of individual training
+   samples in the RBF kernel.
+   Why used: It affects how flexible or complex the decision boundary is.
+
+8. Flattening
+   Meaning: Converting a 2D image array into a 1D feature vector.
+   Why used: The SVM expects feature vectors rather than 2D images.
+   In this practical, each 8x8 image becomes 64 features.
+
+9. Classification report
+   Meaning: A summary of precision, recall, F1-score and support.
+   Why used: It evaluates performance for each digit class.
+
+B. FORMULAS
+
+1. Linear hyperplane
+   w^T x + b = 0
+   Use: Represents a linear SVM decision boundary.
+
+2. Linear SVM margin
+   Margin = 2 / ||w||
+   Use: Represents the distance between the two supporting
+   hyperplanes in the standard linear SVM formulation.
+
+3. Hinge loss
+   L = max(0, 1 - y*f(x))
+   Use: Penalizes incorrect predictions and points inside the margin
+   in a basic binary SVM formulation.
+
+4. Accuracy
+   Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+5. Precision
+   Precision = TP / (TP + FP)
+
+6. Recall
+   Recall = TP / (TP + FN)
+
+7. F1-score
+   F1 = 2 * (Precision * Recall) / (Precision + Recall)
+
+Note: The practical uses SVC(gamma=0.001, C=100), with RBF kernel
+by default. The linear hyperplane and margin formulas are general
+SVM theory; they are not the exact nonlinear RBF boundary.
+
+===========================================================
+PRACTICAL 4 – K-MEANS CLUSTERING USING IRIS
+===========================================================
+
+A. TERMS USED AND WHY
+
+1. Clustering
+   Meaning: An unsupervised learning task that groups similar data
+   points without using known target labels during clustering.
+   Why used: The practical groups Iris observations by similarity.
+
+2. Unsupervised learning
+   Meaning: Learning patterns from data without target labels.
+   Why used: K-Means forms clusters from feature values.
+
+3. Centroid
+   Meaning: The mean position of the data points in a cluster.
+   Why used: K-Means assigns points to the nearest centroid and
+   repeatedly updates centroids.
+
+4. K
+   Meaning: The number of clusters to create.
+   Why used: It tells K-Means how many groups to form.
+
+5. WCSS (Within-Cluster Sum of Squares)
+   Meaning: Sum of squared distances between points and their
+   assigned cluster centroids.
+   Why used: It measures cluster compactness and is used in the
+   Elbow Method.
+
+6. Elbow Method
+   Meaning: A method that compares WCSS for different K values.
+   Why used: It helps choose a reasonable number of clusters by
+   looking for a bend or "elbow" in the curve.
+
+7. StandardScaler
+   Meaning: Scales features to zero mean and unit variance.
+   Why used: Features with larger scales should not dominate
+   distance-based clustering.
+
+8. make_blobs
+   Meaning: A function that generates artificial clustered data.
+   Why used: The practical also demonstrates clustering on synthetic
+   data separately from the Iris dataset.
+
+9. Cluster labels
+   Meaning: Numeric identifiers assigned to clusters.
+   Why used: They identify which cluster each observation belongs to.
+   Cluster numbers do not automatically correspond to Iris species.
+
+B. FORMULAS
+
+1. Euclidean Distance
+   d(x,y) = sqrt[ sum(i=1 to n) (x_i - y_i)^2 ]
+   Use: Measure distance between a point and a centroid.
+
+2. K-Means objective function (WCSS)
+   J = sum(j=1 to K) sum(x_i in C_j) ||x_i - mu_j||^2
+   Use: K-Means attempts to minimize within-cluster squared distances.
+
+3. Centroid
+   mu_j = (1 / |C_j|) * sum(x_i in C_j) x_i
+   Use: Calculate the mean position of points in a cluster.
+
+4. Silhouette Score
+   S = (b - a) / max(a,b)
+   a = average distance within the same cluster.
+   b = average distance to the nearest other cluster.
+   Use: General measure of how well a point fits its own cluster
+   compared with the nearest alternative cluster.
+   Note: This was not part of the core code flow discussed for
+   this practical.
+
+===========================================================
+PRACTICAL 5 – CAR EVALUATION USING RANDOM FOREST
+===========================================================
+
+A. TERMS USED AND WHY
+
+1. Random Forest
+   Meaning: An ensemble learning algorithm that combines many
+   decision trees.
+   Why used: It predicts the car evaluation class using multiple trees.
+
+2. Decision tree
+   Meaning: A tree-shaped model that makes predictions through a
+   sequence of feature-based splits.
+   Why used: Each tree learns rules for separating car classes.
+
+3. Ensemble learning
+   Meaning: Combining predictions from multiple models.
+   Why used: Random Forest combines many trees to produce a final
+   prediction, commonly by majority vote for classification.
+
+4. n_estimators
+   Meaning: Number of trees in the Random Forest.
+   Why used: The practical sets n_estimators=100, so the forest
+   contains 100 trees.
+
+5. LabelEncoder
+   Meaning: Converts category labels into integer codes.
+   Why used: The practical converts categorical columns into numeric
+   values so they can be used by the model.
+   Important: These integer codes can imply an order; encoding choice
+   matters for categorical features.
+
+6. Feature importance
+   Meaning: A score estimating how useful a feature was to the
+   fitted forest's predictions.
+   Why used: It helps compare the relative contribution of input
+   features in the trained model.
+
+7. Gini impurity
+   Meaning: A measure of how mixed the classes are in a tree node.
+   Why used: It is a common criterion for choosing decision-tree splits.
+
+8. Entropy
+   Meaning: A measure of class uncertainty or impurity in a node.
+   Why used: It can be used to evaluate the quality of a tree split.
+
+9. Information gain
+   Meaning: Reduction in entropy after a split.
+   Why used: It measures how much a split improves class separation.
+
+B. FORMULAS
+
+1. Gini Impurity
+   Gini = 1 - sum(i=1 to C) p_i^2
+   Use: Measure class impurity in a node.
+
+2. Entropy
+   Entropy = -sum(i=1 to C) p_i * log2(p_i)
+   Use: Measure uncertainty in a node.
+
+3. Information Gain
+   IG = Entropy(parent) - weighted Entropy(children)
+   Use: Measure reduction in entropy after a split.
+
+4. Accuracy
+   Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+5. Precision
+   Precision = TP / (TP + FP)
+
+6. Recall
+   Recall = TP / (TP + FN)
+
+7. F1-score
+   F1 = 2 * (Precision * Recall) / (Precision + Recall)
+
+Note: The practical uses RandomForestClassifier(n_estimators=100).
+It does not manually calculate Gini, Entropy or Information Gain.
+These are supporting decision-tree concepts.
+
+===========================================================
+PRACTICAL 6 – REINFORCEMENT LEARNING USING MAZE
+===========================================================
+
+A. TERMS USED AND WHY
+
+1. Reinforcement Learning (RL)
+   Meaning: A learning approach where an agent learns by interacting
+   with an environment and receiving rewards or penalties.
+   Why used: The robot learns how to navigate the maze.
+
+2. Agent
+   Meaning: The learner or decision-maker.
+   Why used: The robot is the agent that chooses movements.
+
+3. Environment
+   Meaning: The world in which the agent acts.
+   Why used: The maze is the environment.
+
+4. State
+   Meaning: The current situation or position of the agent.
+   Why used: The robot's row and column position identify its state.
+
+5. Action
+   Meaning: A move the agent can take.
+   Why used: The practical defines four actions: left, right, up and down.
+
+6. Reward
+   Meaning: Feedback received after an action.
+   Why used: Reaching the goal gives a positive reward; hitting an
+   obstacle or taking a step gives a penalty.
+
+7. Episode
+   Meaning: One training attempt or sequence of actions.
+   Why used: The agent repeats episodes to learn how to navigate.
+
+8. Q-table
+   Meaning: A table storing estimated values for state-action pairs.
+   Why used: It helps the agent choose actions expected to give
+   higher future rewards.
+
+9. Learning rate (alpha)
+   Meaning: Controls how strongly new information updates an old
+   Q-value.
+   Why used: It controls the speed of learning.
+
+10. Discount factor (gamma)
+    Meaning: Controls the importance of future rewards compared with
+    immediate rewards.
+    Why used: It helps the agent consider long-term outcomes.
+
+11. Epsilon
+    Meaning: Probability of choosing a random action.
+    Why used: It controls exploration in the epsilon-greedy strategy.
+
+12. Exploration
+    Meaning: Trying actions to discover what happens.
+    Why used: The agent must try different routes to learn the maze.
+
+13. Exploitation
+    Meaning: Choosing the best-known action based on current Q-values.
+    Why used: The agent uses what it has learned to choose promising
+    moves.
+
+14. Epsilon-greedy strategy
+    Meaning: Select a random action with probability epsilon;
+    otherwise select the action with the highest Q-value.
+    Why used: It balances exploration and exploitation.
+
+15. is_valid()
+    Meaning: Checks whether a proposed position is inside the maze
+    and not an obstacle.
+    Why used: It prevents the agent from moving into walls or outside
+    the maze.
+
+16. visited set
+    Meaning: Stores positions already included in the extracted path.
+    Why used: It helps prevent cycles while constructing a path.
+
+B. FORMULAS
+
+1. Q-Learning update
+   Q(s,a) <- Q(s,a) + alpha * [
+       r + gamma * max Q(s',a') - Q(s,a)
+   ]
+
+   Q(s,a) = current Q-value
+   alpha  = learning rate
+   r      = immediate reward
+   gamma  = discount factor
+   s'     = next state
+   max Q  = maximum estimated future Q-value
+
+   Use: Update the value of taking action a in state s.
+
+2. Discounted future reward
+   G_t = R_(t+1) + gamma*R_(t+2)
+         + gamma^2*R_(t+3) + ...
+
+   Use: Represent future rewards while giving later rewards
+   progressively less weight.
+
+3. Epsilon decay used in the practical
+   epsilon = max(0.01, epsilon * 0.995)
+
+   Use: Gradually reduce random exploration but keep a minimum
+   exploration probability of 0.01.
+
+===========================================================
+QUICK REVISION: WHAT TO FOCUS ON
+===========================================================
+
+Practical 1 – KNN + PCA
+   Terms: Features, target, train-test split, KNN, neighbours,
+   distance, scaling, PCA, principal components.
+   Formulas: Euclidean distance, Z-score, accuracy, precision,
+   recall, F1-score.
+
+Practical 2 – Uber Fare Prediction
+   Terms: Regression, target, outliers, IQR, correlation,
+   geodesic distance, feature engineering, Linear/Ridge/Lasso.
+   Formulas: IQR bounds, MAE, MSE, RMSE, R-squared.
+
+Practical 3 – SVM
+   Terms: SVM, support vectors, hyperplane, margin, kernel,
+   C, gamma, flattening.
+   Formulas: Hyperplane, linear margin, hinge loss, classification
+   metrics.
+
+Practical 4 – K-Means
+   Terms: Clustering, unsupervised learning, centroid, K, WCSS,
+   Elbow Method, scaling, cluster labels.
+   Formulas: Euclidean distance, WCSS, centroid.
+
+Practical 5 – Random Forest
+   Terms: Random Forest, decision tree, ensemble, n_estimators,
+   LabelEncoder, feature importance.
+   Formulas: Gini, Entropy, Information Gain, classification metrics.
+
+Practical 6 – Reinforcement Learning
+   Terms: Agent, environment, state, action, reward, episode,
+   Q-table, alpha, gamma, epsilon, exploration, exploitation.
+   Formula: Q-Learning update and epsilon decay.
+
+===========================================================
+CONFUSION MATRIX: FOUR TERMS TO REMEMBER
+===========================================================
+
+TP (True Positive):
+   Actual positive and predicted positive.
+
+TN (True Negative):
+   Actual negative and predicted negative.
+
+FP (False Positive):
+   Actual negative but predicted positive.
+
+FN (False Negative):
+   Actual positive but predicted negative.
+
+Accuracy  = Correct predictions / Total predictions
+Precision = Out of predicted positives, how many were correct?
+Recall    = Out of actual positives, how many were identified?
+F1-score  = Harmonic mean of Precision and Recall.
+
+EXAM NOTE
+---------
+Learn the meaning and purpose of each term, not just its definition.
+Some formulas in this sheet are supporting theory and may not be
+directly calculated by the practical's code. Prioritize the formulas
+and functions actually used in your practical, then revise the
+additional theory for viva questions.
